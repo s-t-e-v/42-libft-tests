@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/09 19:14:25 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/09 19:36:44 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static void	tests() {
 		"a",
 		"abc def",
 		"dwefwef hfiuwehfiuew fewufhiuwehfiuwe weiufiwuefhiuewf ufihiewufhi",
+		"dwefwef\nhfi\tfewufhiuweh\vfiuwuu\x14 fihiew\x7f ufhi",
+		"                       ",
 		"\0",
 		NULL,
 	};
