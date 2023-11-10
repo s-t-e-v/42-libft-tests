@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/10 17:33:42 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/10 20:02:52 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void	tests_char() {
 			res_og = (char *)OG_FUNC(&data2[i], c[j], n);
 			sprintf(test.actual, "%d (char)", *res);
 			sprintf(test.expected, "%d (char)", *res_og);
-			test_assert(memcmp(&res, &res_og, sizeof(res)), test);
+			test_assert(memcmp(res, res_og, sizeof(res)) == 0, test);
 			// reinitialize current data and data2
 			memcpy(data, data_cpy, sizeof(data));
 			memcpy(data2, data2_cpy, sizeof(data2));

@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/10 17:53:28 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/10 20:00:00 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,55 +41,57 @@ static void	test_assert(int condition, t_test_data test)
 }
 
 /* Tests functions */
-static void tests_char() {
-    size_t i;
-    t_test_data test;
-    char data[] = {
-        'e',
-        '\n',
-        '\0',
-        '*',
-        '0',
-        '5',
-        127,
-        -1,
-        -10,
-        -50,
-        -128
-    };
+static void	tests_char() {
+	size_t i;
+	t_test_data test;
+	char	data[] = {
+		'e',
+		'\n',
+		'\0',
+		'*',
+		'0',
+		'5',
+		127,
+		-1,
+		-10,
+		-50,
+		-128
+	};
+	
+	size_t	n = sizeof(data[0]);
+	char res;
+	char res_og;
+	char data2[sizeof(data) / sizeof(data[0])];
+	char data_cpy[sizeof(data) / sizeof(data[0])];
+	
+	// ---- general cases
+	i = 0;
+	while (i < sizeof(data) / sizeof(data[0]))
+	{
+		data2[i] = data[i];
+		data_cpy[i] = data[i];
+		i++;
+	}
 
-    size_t n = sizeof(data[0]);
-    char data2[sizeof(data) / sizeof(data[0])];
-    char data_cpy[sizeof(data) / sizeof(data[0])];
+	i = 0;
+	while (i < sizeof(data) / sizeof(data[0]))
+	{
+		sprintf(test.message, "%s(%d, %ld)", FT, data[i], n);
+		
+		FUNC(&data[i], n);
+		OG_FUNC(&data2[i], n);
+		res =  data[i];
+		res_og = data2[i];
+		sprintf(test.actual, "%d (char)", res);
+		sprintf(test.expected, "%d (char)", res_og);
+		test_assert(memcmp(&res, &res_og, sizeof(res)) == 0, test);
 
-    // ---- general cases
-    i = 0;
-    while (i < sizeof(data) / sizeof(data[0]))
-    {
-        data2[i] = data[i];
-        data_cpy[i] = data[i];
-        i++;
-    }
-
-    i = 0;
-    while (i < sizeof(data) / sizeof(data[0]))
-    {
-        sprintf(test.message, "%s(%d, %ld)", FT, data[i], n);
-
-        FUNC(&data[i], n);
-        OG_FUNC(&data2[i], n);
-
-        int result = memcmp(&data[i], &data2[i], sizeof(data[0]));
-        sprintf(test.actual, "%d", result);
-        sprintf(test.expected, "0");
-        test_assert(result == 0, test);
-
-        // reinitialize current data and data2
-        memcpy(data, data_cpy, sizeof(data));
-        memcpy(data2, data_cpy, sizeof(data2));
-
-        i++;
-    }
+		// reinitialize current data and data2
+		memcpy(data, data_cpy, sizeof(data));
+		memcpy(data2, data_cpy, sizeof(data2));
+				
+		i++;
+	}
 }
 
 /* Run tests */
