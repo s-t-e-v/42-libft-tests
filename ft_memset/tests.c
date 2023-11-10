@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/10 15:33:20 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:11:37 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,23 @@
 
 static int tests_run = 0;
 static int tests_failed = 0;
+static int c[] = {
+		0,
+		1,
+		10,
+		100,
+		127,
+		128,
+		150,
+		3000,
+		-1,
+		-10,
+		-100,
+		-127,
+		-128,
+		-150,
+		-3000
+	};
 
 typedef struct s_test_data {
 	char expected[1000];
@@ -45,7 +62,7 @@ static void	tests_char() {
 	size_t j;
 	size_t k;
 	t_test_data test;
-	char	chars[] = {
+	char	data[] = {
 		'e',
 		'\n',
 		'\0',
@@ -58,73 +75,40 @@ static void	tests_char() {
 		-50,
 		-128
 	};
-	char	chars2[] = {
-		'e',
-		'\n',
-		'\0',
-		'*',
-		'0',
-		'5',
-		127,
-		-1,
-		-10,
-		-50,
-		-128
-	};
-	int c[] = {
-		0,
-		1,
-		10,
-		100,
-		127,
-		128,
-		150,
-		3000,
-		-1,
-		-10,
-		-100,
-		-127,
-		-128,
-		-150,
-		-3000
-	};
-
-	int n[] = {
-		sizeof(chars[0]),
-		1,
-		// 2,
-		// 4,
-		// 8,
-		// 12
-	};
+	
+	int n = sizeof(data[0]);
 	char *res;
 	char *res_og;
-	char save_char;
-	char save_char2;
+	char data2[sizeof(data) / sizeof(data[0])];
+	char data_cpy[sizeof(data) / sizeof(data[0])];
+    char data2_cpy[sizeof(data2) / sizeof(data2[0])];
 	
 	// ---- general cases
 	i = 0;
-	while (i < sizeof(chars) / sizeof(chars[0]))
+	while (i < sizeof(data) / sizeof(data[0]))
 	{
-		save_char = chars[i];
-		save_char2 = chars2[i];
+		data2[i] = data[i];
+		data_cpy[i] = data[i];
+        data2_cpy[i] = data2[i];		
+		i++;
+	}
+
+	i = 0;
+	while (i < sizeof(data) / sizeof(data[0]))
+	{
 		j = 0;
 		while (j < sizeof(c) / sizeof(c[0]))
 		{
-			k = 0;
-			while (k < sizeof(n) / sizeof(n[0]))
-			{
-				sprintf(test.message, "%s(%d, %d, %d)", FT, chars[i], c[j], n[k]);
-				res = (char *)FUNC(&chars[i], c[j], n[k]);
-				res_og = (char *)OG_FUNC(&chars2[i], c[j], n[k]);
-				sprintf(test.actual, "%d (char)", *res);
-				sprintf(test.expected, "%d (char)", *res_og);
-				test_assert(!memcmp(&res, &res_og, sizeof(res)), test);
-				// reinitialize current chars and chars2
-				chars[i] = save_char;
-				chars2[i] = save_char2;
-				k++;
-			}
+			sprintf(test.message, "%s(%d, %d, %d)", FT, data[i], c[j], n);
+			res = (char *)FUNC(&data[i], c[j], n);
+			res_og = (char *)OG_FUNC(&data2[i], c[j], n);
+			sprintf(test.actual, "%d (char)", *res);
+			sprintf(test.expected, "%d (char)", *res_og);
+			test_assert(memcmp(&res, &res_og, sizeof(res)), test);
+			// reinitialize current data and data2
+			memcpy(data, data_cpy, sizeof(data));
+			memcpy(data2, data2_cpy, sizeof(data2));
+				
 			j++;
 		}
 		i++;
