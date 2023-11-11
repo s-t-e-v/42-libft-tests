@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/11 19:06:44 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/11 19:38:36 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,16 @@ static void	test1() {
 	size_t		res_og;
 	char 		src[] = "A";
 	char 		src_og[sizeof(src)];
-	char		dst[1000];
-	char		dst_og[1000];
+	char		dst[100];
+	char		dst_og[100];
 	
 	strlcpy(src_og, src, sizeof(src));
+	
+	// Initialize to ones
+	memset(dst, 49, sizeof(dst));
+	memset(dst_og, 49, sizeof(dst_og));
+	dst[99] = 0;
+	dst_og[99] = 0;
 
 	sprintf(test.message, "%s(%s, %s, %ld)", FT, "dest", src, sizeof(src));
 	res = FUNC(dst, src, sizeof(src));
@@ -67,8 +73,14 @@ static void	test2() {
 	size_t		res_og;
 	char 		src[] = "";
 	char 		src_og[] = "";
-	char		dst[1000];
-	char		dst_og[1000];
+	char		dst[100];
+	char		dst_og[100];
+	
+	// Initialize to ones
+	memset(dst, 49, sizeof(dst));
+	memset(dst_og, 49, sizeof(dst_og));
+	dst[99] = 0;
+	dst_og[99] = 0;
 	
 
 	sprintf(test.message, "%s(%s, %s, %ld)", FT, "dest", src, sizeof(src));
@@ -86,16 +98,22 @@ static void	test3() {
 	size_t		res_og;
 	char 		src[] = "Je vais faire des pates ce soir";
 	char 		src_og[sizeof(src)];
-	char		dst[1000];
-	char		dst_og[1000];
+	char		dst[100];
+	char		dst_og[100];
 	
 	strlcpy(src_og, src, sizeof(src));
-
 	sprintf(test.message, "%s(%s, %s, %ld)", FT, "dest", src, sizeof(src));
+	
+	// Initialize to ones
+	memset(dst, 49, sizeof(dst));
+	memset(dst_og, 49, sizeof(dst_og));
+	dst[99] = 0;
+	dst_og[99] = 0;
+
 	res = FUNC(dst, src, sizeof(src));
 	res_og = OG_FUNC(dst_og, src_og, sizeof(src_og));
-	sprintf(test.actual, "%ld", res);
-	sprintf(test.expected, "%ld", res_og);
+	sprintf(test.actual, "return value: %ld, dest:%s", res, dst);
+	sprintf(test.expected, "return value: %ld, dest:%s", res_og, dst_og);
 
 	test_assert((memcmp(dst, dst_og, sizeof(src)) == 0) && (res == res_og), test);
 }
