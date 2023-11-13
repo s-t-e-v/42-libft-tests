@@ -6,12 +6,13 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/13 15:55:03 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/13 16:23:38 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <bsd/string.h>
+#include <ctype.h>
 #include "../../libft.h"
 #define FT "ft_atoi"
 #define FUNC(a) ft_atoi(a)
@@ -26,14 +27,32 @@ typedef struct s_test_data {
 	char message[1000]; // Make sure this is large enough to hold your message
 } t_test_data;
 
+
+void print_string_with_escapes(const char *str) {
+    while (*str) {
+        if (isprint((unsigned char)*str)) {
+            putchar(*str);
+        } else {
+            printf("\\x%02x", (unsigned char)*str);
+        }
+        str++;
+    }
+}
+
 /* Test assert function */
 static void	test_assert(int condition, t_test_data test)
 {
 	if (!condition) {
 		tests_failed++;
-		printf("FAIL: %s\n", test.message);
-		printf("    Expected: %s\n", test.expected);
-		printf("    Actual: %s\n", test.actual);
+		printf("FAIL: ");
+		print_string_with_escapes(test.message);
+		printf("\n");
+		printf("    Expected: ");
+		print_string_with_escapes(test.expected);
+		printf("\n");
+		printf("    Actual: ");
+		print_string_with_escapes(test.actual);
+		printf("\n");
 	}
 	tests_run++;
 }
@@ -83,7 +102,7 @@ static void	test1() {
 		"+10ddfd86868",
 		"+42\t\t\t+++",
 		"           +125,r,,",
-		"+5670",
+		"\v+56\t\r70",
 		// invalid
 		"",
 		"--2147483648",
@@ -98,91 +117,36 @@ static void	test1() {
 		"\t\r\v+srsrsrsrs",
 		"+ 8,",
 	};
-	char		little[][100] = {
-		"",
-		"a",
-		"aa",
-		"aaa",
-		"bba",
-		"ba",
-		"naan",
-		"aaab",
-		";;;;;;;;;;;;",
-		"Aa",
-		"nna",
-		"nn",
-		"Ba",
-		"9",
-		"899999",
-		"655555555555555555",
-		"AAaaBaaBaaabbbbbbbbbbbbb",
-	};
-	size_t 		len[] = {
-		0,
-		1,
-		2,
-		3,
-		5,
-		10,
-		15,
-		20,
-		30,
-		50,
-	};
-	char			*res = 0;
-	char			*res_og = 0;
-	char		big_og[sizeof(big) / sizeof(big[0])][100];
-	char		little_og[sizeof(little) / sizeof(little[0])][100];
-	char		big_cpy[sizeof(big) / sizeof(big[0])][100];
-	char		little_cpy[sizeof(little) / sizeof(little[0])][100];
+	int			res = 0;
+	int			res_og = 0;
+	char		data_og[sizeof(data) / sizeof(data[0])][100];
+	char		data_cpy[sizeof(data) / sizeof(data[0])][100];
 	
 	// ---- general cases
 	i = 0;
-	while (i < sizeof(big) / sizeof(big[0]))
+	while (i < sizeof(data) / sizeof(data[0]))
 	{
-		memcpy(big_cpy[i], big[i], sizeof(big[i]));
-		memcpy(big_og[i], big[i], sizeof(big[i]));
-		i++;
-	}
-	i = 0;
-	while (i < sizeof(little) / sizeof(little[0]))
-	{
-		memcpy(little_cpy[i], little[i], sizeof(little[i]));
-		memcpy(little_og[i], little[i], sizeof(little[i]));
+		memcpy(data_cpy[i], data[i], sizeof(data[i]));
+		memcpy(data_og[i], data[i], sizeof(data[i]));
 		i++;
 	}
 
 	i = 0;
-	while (i < sizeof(big) / sizeof(big[0]))
+	while (i < sizeof(data) / sizeof(data[0]))
 	{
-		j = i;
-		while (j < sizeof(little) / sizeof(little[0]))
-		{
-			k = 0;
-			while (k < sizeof(len) / sizeof(len[0]))
-			{
+		sprintf(test.message, "%s(%s)", FT, data[i]);
+		// printf("%s\n", test.message);
+		res = FUNC(data[i]);
+		res_og = OG_FUNC(data_og[i]);
+		sprintf(test.actual, "%d", res);
+		sprintf(test.expected, "%d", res_og);
 
-				sprintf(test.message, "%s(%s, %s, %ld)", FT, big[i], little[j], len[k]);
-				// printf("%s\n", test.message);
-				res = FUNC(big[i], little[j], len[k]);
-				res_og = OG_FUNC(big_og[i], little_og[j], len[k]);
-				sprintf(test.actual, "%s", res);
-				sprintf(test.expected, "%s", res_og);
+		test_assert(res == res_og, test);
 
-				// test_assert(memcmp(res, res_og, strlen(res) + 1) == 0, test);
-				test_assert((res == NULL && res_og == NULL) || ((res != NULL && res_og != NULL) && (memcmp(res, res_og, strlen(res_og) + 1) == 0)), test);
+		// reinitialize current big and little and og variables
+		memcpy(data, data_cpy, sizeof(data_cpy));
+		memcpy(data_og, data_cpy, sizeof(data_cpy));
 
-				// reinitialize current big and little and og variables
-				memcpy(big, big_cpy, sizeof(big_cpy));
-				memcpy(big_og, big_cpy, sizeof(big_cpy));
-				memcpy(little, little_cpy, sizeof(little_cpy));
-				memcpy(little_og, little_cpy, sizeof(little_cpy));
-
-				k++;
-			}
-				
-			j++;
-		}
 		i++;
 	}	
 }
