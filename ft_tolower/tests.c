@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/14 19:17:54 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/14 19:22:55 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	test1() {
 
 	bzero(&test, sizeof(test));
 	
-	char	data[] = {
+	int	data[] = {
 		'a',
 		'A',
 		'b',
@@ -80,12 +80,24 @@ static void	test1() {
 		1,
 		10,
 		12,
-		' '
+		' ',
+		'\0',
+		'\n',
+		'1',
+		3000,
+		-1,
+		-127,
+		-3000,
+		127,
+		-128,
+		128,
+		-129,
+		'F'
 	};
-	char		res = 0;
-	char		res_og = 0;
-	char		data_og[sizeof(data) / sizeof(data[0])];
-	char		data_cpy[sizeof(data) / sizeof(data[0])];
+	int		res = 0;
+	int		res_og = 0;
+	int		data_og[sizeof(data) / sizeof(data[0])];
+	int		data_cpy[sizeof(data) / sizeof(data[0])];
 	
 	// ---- general cases
 	memcpy(data_og, data, sizeof(data));
