@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/14 01:26:48 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/14 16:35:44 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <strings.h>
 #include "../../libft.h"
 #define FT "ft_calloc"
 #define FUNC(a, b) ft_calloc(a, b)
@@ -44,7 +45,7 @@ void print_string_with_escapes(const char *str) {
 /* Test assert function */
 static void	test_assert(int condition, t_test_data test)
 {
-	if (condition) {
+	if (!condition) {
 		tests_failed++;
 		printf("FAIL: ");
 		print_string_with_escapes(test.message);
@@ -63,17 +64,20 @@ static void	test_assert(int condition, t_test_data test)
 static void	test1() {
 	size_t		i;
 	t_test_data	test;
+
+	bzero(&test, sizeof(test));
 	
 	size_t	nmemb[] = {
 		0,
 		1,
 		5,
 		10,
-		SIZE_MAX,
+		9000000000000000000,
+		// (size_t)-1
 	};
 	size_t	size = sizeof(char);
 	char		*res = 0;
-	int			*res_og = 0;
+	char		*res_og = 0;
 	size_t		nmemb_og[sizeof(nmemb) / sizeof(nmemb[0])];
 	size_t		nmemb_cpy[sizeof(nmemb) / sizeof(nmemb[0])];
 	
@@ -92,12 +96,16 @@ static void	test1() {
 		// printf("Bruh\n");
 		// if (res == NULL)
 		// 	printf("res == null\n");
-		if (res)
+		if (nmemb[i] == 0)
+			sprintf(test.actual, "Zero-sized array (address: %p)", res);
+		else if (res)
 			sprintf(test.actual, "\\x%02x", *res);
 		else
 			sprintf(test.actual, "NULL");
 		// printf("ptdr...\n");
-		if(res_og)
+		if (nmemb[i] == 0)
+			sprintf(test.expected, "Zero-sized array (address: %p)", res_og);
+		else if(res_og)
 			sprintf(test.expected, "\\x%02x", *res_og);
 		else
 			sprintf(test.expected, "NULL");
