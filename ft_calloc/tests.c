@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/13 18:05:17 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/14 01:26:48 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <bsd/string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "../../libft.h"
 #define FT "ft_calloc"
 #define FUNC(a, b) ft_calloc(a, b)
@@ -43,7 +44,7 @@ void print_string_with_escapes(const char *str) {
 /* Test assert function */
 static void	test_assert(int condition, t_test_data test)
 {
-	if (!condition) {
+	if (condition) {
 		tests_failed++;
 		printf("FAIL: ");
 		print_string_with_escapes(test.message);
@@ -68,16 +69,16 @@ static void	test1() {
 		1,
 		5,
 		10,
-		sizeof(size_t),
+		SIZE_MAX,
 	};
 	size_t	size = sizeof(char);
 	char		*res = 0;
 	int			*res_og = 0;
-	char		nmemb_og[sizeof(nmemb) / sizeof(nmemb[0])];
-	char		nmemb_cpy[sizeof(nmemb) / sizeof(nmemb[0])];
+	size_t		nmemb_og[sizeof(nmemb) / sizeof(nmemb[0])];
+	size_t		nmemb_cpy[sizeof(nmemb) / sizeof(nmemb[0])];
 	
 	// ---- general cases
-	memcpy(nmemb, nmemb, sizeof(nmemb));
+	memcpy(nmemb_og, nmemb, sizeof(nmemb));
 	memcpy(nmemb_cpy, nmemb, sizeof(nmemb));
 
 	i = 0;
@@ -86,9 +87,20 @@ static void	test1() {
 		sprintf(test.message, "%s(%zu, %zu)", FT, nmemb[i], size);
 		// printf("%s\n", test.message);
 		res = FUNC(nmemb[i], size);
+		// printf("Yo !\n");
 		res_og = OG_FUNC(nmemb_og[i], size);
-		sprintf(test.actual, "\\x%02x", *res);
-		sprintf(test.expected, "\\x%02x", *res_og);
+		// printf("Bruh\n");
+		// if (res == NULL)
+		// 	printf("res == null\n");
+		if (res)
+			sprintf(test.actual, "\\x%02x", *res);
+		else
+			sprintf(test.actual, "NULL");
+		// printf("ptdr...\n");
+		if(res_og)
+			sprintf(test.expected, "\\x%02x", *res_og);
+		else
+			sprintf(test.expected, "NULL");
 
 		test_assert((res == NULL && res_og == NULL) || ((res != NULL && res_og != NULL) && (memcmp(res, res_og, nmemb[i]*size) == 0)), test);
 
@@ -100,7 +112,7 @@ static void	test1() {
 
 		// reinitialize current big and little and og variables
 		memcpy(nmemb, nmemb_cpy, sizeof(nmemb_cpy));
-		memcpy(nmemb, nmemb_cpy, sizeof(nmemb_cpy));
+		memcpy(nmemb_og, nmemb_cpy, sizeof(nmemb_cpy));
 
 		i++;
 	}	
