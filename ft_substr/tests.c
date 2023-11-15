@@ -46,7 +46,6 @@ void print_string_with_escapes(const char *str) {
     }
 }
 
-
 /* Test assert function */
 static void	test_assert(int condition, t_test_data test)
 {
@@ -73,9 +72,43 @@ static void	test1() {
 		{"", 0, 0, NULL},
 		{"", 0, 1, ""},
 		{"", 0, 2, ""},
+		{"", 0, 5, ""},
 		{"", 1, 0, NULL},
 		{"", 1, 1, NULL},
 		{"", 1, 2, NULL},
+		{"a", 0, 1, "a"},
+		{"a", 0, 2, "a"},
+		{"a", 1, 1, ""},
+		{"a", 1, 2, ""},
+		{"a", 1, 5, ""},
+		{"a", 2, 0, NULL},
+		{"a", 2, 1, NULL},
+		{"a", 2, 2, NULL},
+		{"a", 2, 5, NULL},
+		{"ab", 0, 1, "a"},
+		{"ab", 0, 2, "ab"},
+		{"ab", 0, 3, "ab"},
+		{"ab", 0, 5, "ab"},
+		{"ab", 1, 1, "b"},
+		{"ab", 1, 3, "b"},
+		{"ab", 2, 1, ""},
+		{"ab", 2, 2, ""},
+		{"ab", 2, 3, ""},
+		{"ab", 3, 1, NULL},
+		{"ab", 3, 2, NULL},
+		{"ab", 3, 5, NULL},
+		{"je suis bien", 0, 1, "j"},
+		{"je suis bien", 0, 2, "je"},
+		{"je suis bien", 0, 3, "je "},
+		{"je suis bien", 0, 12, "je suis bien"},
+		{"je suis bien", 0, 20, "je suis bien"},
+		{"je suis bien", 3, 4, "suis"},
+		{"je suis bien", 8, 4, "bien"},
+		{"je suis bien", 12, 1, ""},
+		{"je suis bien", 12, 3, ""},
+		{"je suis bien", 13, 1, NULL},
+		{"je suis bien", 13, 2, NULL},
+		{"je suis bien", 13, 5, NULL},
 	};
 	
 	char *actual;
