@@ -69,6 +69,10 @@ static void	test1() {
 	size_t i;
 	t_test_data test;
 	t_params	params[] = {
+		{NULL, 0, 0, NULL},
+		{NULL, 0, 1, NULL},
+		{NULL, 0, 2, NULL},
+		{NULL, 1, 3, NULL},
 		{"", 0, 0, NULL},
 		{"", 0, 1, ""},
 		{"", 0, 2, ""},
