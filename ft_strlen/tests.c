@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/09 19:36:44 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:44:12 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ static void	test_assert(int condition, const char* message)
 
 /* Tests functions */
 static void	tests() {
-	int i;
+	size_t i;
+	size_t	res;
+	size_t res_og;
 	char *strs[] = {
+		// NULL,
 		"",
 		"a",
 		"abc def",
@@ -44,24 +47,19 @@ static void	tests() {
 		"dwefwef\nhfi\tfewufhiuweh\vfiuwuu\x14 fihiew\x7f ufhi",
 		"                       ",
 		"\0",
-		NULL,
 	};
 	char message[1000]; // Make sure this is large enough to hold your message
 
 	// ---- general cases
 	i = 0;
-	while (strs[i])
+	while (i < sizeof(strs) / sizeof(char*))
 	{
 		sprintf(message, "%s('%s')", FT, strs[i]);
-		test_assert(FUNC(strs[i]) == OG_FUNC(strs[i]), message);
+		res = FUNC(strs[i]);
+		res_og = OG_FUNC(strs[i]);
+		test_assert(res == res_og, message);
 		i++;
 	}
-}
-
-static void	test_valid() {
-}
-
-static void	test_invalid() {
 }
 
 /* Run tests */
