@@ -54,10 +54,12 @@ static int compare_string_arrays(char **strs1, char **strs2, size_t len) {
 
 	i = 0;
 	while (i < len) {
-      if (!(strs1[i] == NULL && strs2[i] == NULL) || ((strs1[i] && strs2[i]) && (strcmp(strs1[i], strs2[i]) != 0)))
-	  {
+		if ((strs1[i] == NULL && strs2[i]) || (strs1[i] && strs2[i] == NULL))
+			return (1);
+      	else if ((strs1[i] && strs2[i]) && strcmp(strs1[i], strs2[i]))
+	  	{
           return (1); // Strings are not identical
-      }
+      	}
 	  i++;
 	}
     return (0); // All strings are identical
@@ -104,7 +106,10 @@ static void array_str_to_str(char *str, char **strs) {
     }
 
     // Add a null entry at the end and close the string with a closing curly brace
-    sprintf(str, ", (null)}");
+	if (i == 0)
+    	sprintf(str, "(null)}");
+	else
+		sprintf(str, ", (null)}");
 }
 
 /* Test assert function */
@@ -118,10 +123,21 @@ static void	test_assert(int condition, t_test_data test)
 		printf("    Expected: ");
 		print_string_with_escapes(test.expected);
 		printf("\n");
-		printf("    Actual: ");
+		printf("    Actual  : ");
 		print_string_with_escapes(test.actual);
 		printf("\n");
 	}
+	// else {
+	// 	printf("SUCCESS: ");
+	// 	print_string_with_escapes(test.message);
+	// 	printf("\n");
+	// 	printf("    Expected: ");
+	// 	print_string_with_escapes(test.expected);
+	// 	printf("\n");
+	// 	printf("    Actual  : ");
+	// 	print_string_with_escapes(test.actual);
+	// 	printf("\n");
+	// }
 	tests_run++;
 }
 
@@ -131,27 +147,27 @@ static void	test1() {
 	size_t j;
 	t_test_data test;
 	t_params params[] = {
-		// {NULL, '\0', NULL},
-		// {NULL, 'a', NULL},
-		// {"", '\0', (const char *[]){"", NULL}},
-		// {"", 'a', NULL},
-		// {"a", '\0', (const char *[]){"a", NULL}},
-		// {"a", 'a', (const char *[]){"", NULL}},
-		// {"a", 'b', NULL},
-		// {",a", ',', (const char *[]){"", "a", NULL}},
-		// {"a,", ',', (const char *[]){"a", "", NULL}},
-		{",a,", ',', (const char *[]){"", "a", "", NULL}},
-		// {"ab", '\0', (const char *[]){"ab", NULL}},
-		// {"ab", ',', NULL},
-		// {",ab", ',', (const char *[]){"", "ab", NULL}},
-		// {"ab,", ',', (const char *[]){"ab", "", NULL}},
-		// {",ab,", ',', (const char *[]){"", "ab", "", NULL}},
-		// {",a,b", ',', (const char *[]){"", "a", "b", NULL}},
-		// {"a,b,", ',', (const char *[]){"a", "b", "", NULL}},
-		// {"a,b", ',', (const char *[]){"a", "b", NULL}},
-		// {",a,b,", ',', (const char *[]){"", "a", "b", "", NULL}},
-		// {",", ',', (const char *[]){"", "", NULL}},
-		// {",,", ',', (const char *[]){"", "", "", NULL}},
+		{NULL, '\0', NULL},
+		{NULL, 'a', NULL},
+		{"", '\0', (const char *[]){"", NULL}},
+		{"", 'a', NULL},
+		{"a", '\0', (const char *[]){"a", NULL}},
+		{"a", 'a', (const char *[]){"", NULL}},
+		{"a", 'b', NULL},
+		{"/a", '/', (const char *[]){"", "a", NULL}},
+		{"a/", '/', (const char *[]){"a", "", NULL}},
+		{"/a/", '/', (const char *[]){"", "a", "", NULL}},
+		{"ab", '\0', (const char *[]){"ab", NULL}},
+		{"ab", '/', NULL},
+		{"/ab", '/', (const char *[]){"", "ab", NULL}},
+		{"ab,", '/', (const char *[]){"ab", "", NULL}},
+		{"/ab,", '/', (const char *[]){"", "ab", "", NULL}},
+		{"/a/b", '/', (const char *[]){"", "a", "b", NULL}},
+		{"a/b/", '/', (const char *[]){"a", "b", "", NULL}},
+		{"a/b", '/', (const char *[]){"a", "b", NULL}},
+		{"/a/b/", '/', (const char *[]){"", "a", "b", "", NULL}},
+		{"/", '/', (const char *[]){"", "", NULL}},
+		{"//", '/', (const char *[]){"", "", "", NULL}},
 	};
 	
 	char **actual;
@@ -161,7 +177,6 @@ static void	test1() {
 	i = 0;
 	while (i < sizeof(params) / sizeof(params[0]))
 	{
-		printf("%ld\n", i);
 		if (isprint((unsigned char)params[i].c))
 			sprintf(test.message, "%s(\"%s\", '%c')", FT, params[i].s, params[i].c);
 		else
@@ -169,18 +184,6 @@ static void	test1() {
 
 		// printf("%s\n", test.message);
 		actual = FUNC(params[i].s, params[i].c);
-		if (actual)
-		{
-
-		j = 0;
-			while (actual[j])
-	{
-		printf("strs[%lu]:%s\n", j, actual[j]);
-		j++;
-	}
-			printf("strs[%lu]:%s\n", j, actual[j]);
-
-		}
 		expected = (char **)params[i].expected;
 		array_str_to_str(test.actual, actual);
 		array_str_to_str(test.expected, expected);
