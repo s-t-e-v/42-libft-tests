@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/11 19:38:36 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/16 15:22:42 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_test_data {
 /* Test assert function */
 static void	test_assert(int condition, t_test_data test)
 {
-	if (!condition) {
+	if (condition) {
 		tests_failed++;
 		printf("FAIL: %s\n", test.message);
 		printf("    Expected: %s\n", test.expected);
