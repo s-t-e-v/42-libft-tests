@@ -17,8 +17,8 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include "../../libft.h"
-#define FT "ft_putstr_fd"
-#define FUNC(a, b) ft_putstr_fd(a, b)
+#define FT "ft_putendl_fd"
+#define FUNC(a, b) ft_putendl_fd(a, b)
 
 static int tests_run = 0;
 static int tests_failed = 0;
@@ -111,11 +111,11 @@ static void	test1() {
 	t_test_data test;
 	t_params params[] = {
 		{NULL, NULL},
-		{"", ""},
-		{"\0", "\0"},
-		{"\n", "\n"},
-		{"0", "0"},
-		{"Tata", "Tata"},
+		{"", "\n"},
+		{"\0", "\n"},
+		{"\n", "\n\n"},
+		{"0", "0\n"},
+		{"Tata", "Tata\n"},
 	};
 	
 	char	*expected;
@@ -167,11 +167,11 @@ static void	test1() {
 
 		if (s_not_null)
 		{
-			actual = (char *)malloc((len + 1) * sizeof(char));
+			actual = (char *)malloc(((len + 1) + 1) * sizeof(char));
 			if (actual)
 			{
-				read(fd, actual, len);
-				actual[len] = 0;
+				read(fd, actual, len + 1);
+				actual[len + 1] = 0;
 			}
 
 		}
@@ -182,10 +182,10 @@ static void	test1() {
 		remove(temp_file);
 
 		expected = (char *)params[i].expected;
-		str_with_escapes(test.actual, actual, len);
-		str_with_escapes(test.expected, expected, len);
+		str_with_escapes(test.actual, actual, len + 1);
+		str_with_escapes(test.expected, expected, len + 1);
 
-		test_assert((actual == NULL && expected == NULL) || ((actual != NULL && expected != NULL) && (memcmp(actual, expected, len) == 0)), test);
+		test_assert((actual == NULL && expected == NULL) || ((actual != NULL && expected != NULL) && (memcmp(actual, expected, len + 1) == 0)), test);
 
 		if (actual)
 			free(actual);
