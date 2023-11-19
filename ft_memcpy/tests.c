@@ -6,7 +6,7 @@
 /*   By: sbandaog <sbandaog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:35:34 by sbandaog          #+#    #+#             */
-/*   Updated: 2023/11/11 16:52:59 by sbandaog         ###   ########.fr       */
+/*   Updated: 2023/11/19 04:20:25 by sbandaog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ static void	test_assert(int condition, const char *message)
 		tests_failed++;
 		printf("FAIL: %s\n", message);
 	}
+	else {
+		printf("SUCCESS: %s\n", message);
+	}
 	tests_run++;
 }
 
@@ -58,19 +61,37 @@ static void	test2() {
 	char		res_og[1000];
 	char 		src[] = "Je suis vieux";
 
-	FUNC(res, src, sizeof(src));
 	OG_FUNC(res_og, src, sizeof(src));
+	FUNC(res, src, sizeof(src));
 	sprintf(test.message, "%s(%s, %s, %ld)", FT, "dest", src, sizeof(src));
 
 
 	test_assert(memcmp(res, res_og, sizeof(src)) == 0, test.message);
 }
 
+// static void	test3() {
+// 	t_test_data	test;
+// 	char		*res = 0;
+// 	char		*res_og = 0;
+// 	char 		*src = 0;
+
+// 	printf("YOOOOO\n");
+// 	FUNC(res, src, 3);
+// 	OG_FUNC(res_og, src, 3);
+// 	sprintf(test.message, "%s(%s, %s, %d)", FT, "dest", src, 3);
+// 	printf("%s\n", test.message);
+// 	printf("OOOOOY\n");
+
+
+// 	test_assert((res == NULL && res_og == NULL) || ((res && res_og) && (memcmp(res, res_og, 3) == 0)), test.message);
+// }
+
 /* Run tests */
 static void	run_tests()
 {
 	test1();
 	test2();
+	// test3();
 }
 
 int	main()
