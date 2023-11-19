@@ -36,6 +36,11 @@ static void	test_assert(int condition, t_test_data test)
 		printf("    Expected: %s\n", test.expected);
 		printf("    Actual: %s\n", test.actual);
 	}
+	else {
+		printf("SUCCESS: %s\n", test.message);
+		printf("    Expected: %s\n", test.expected);
+		printf("    Actual: %s\n", test.actual);
+	}
 	tests_run++;
 }
 
@@ -77,10 +82,48 @@ static void	test1() {
 	test_assert(res_str == res_str_og, test);
 }
 
+static void	test2() {
+	t_test_data	test;
+	int			res;
+	int			res_og;
+	char		res_str = 0;
+	char		res_str_og = 0;
+	char 		s1[] = "t";
+	char 		s2[] = "";
+	char 		s1_og[] = "t";
+	char 		s2_og[] = "";
+	size_t		n = 0;
+	size_t		n_og = n;
+	
+	sprintf(test.message, "%s(%s, %s, %ld)", FT, s1, s2, n);
+	res = FUNC(s1, s2, n);
+	res_og = OG_FUNC(s1_og, s2_og, n_og);
+	printf("expected: %d\n", res_og);
+	printf("actual: %d\n", res);
+	if (res > 0)
+    	res_str = '>';
+	else if (res < 0)
+    	res_str = '<';
+	else
+    	res_str = '=';
+	if (res_og > 0)
+		res_str_og = '>';
+	else if (res_og < 0)
+		res_str_og = '<';
+	else
+		res_str_og = '=';
+	sprintf(test.actual, "return value %c 0", res_str);
+	sprintf(test.expected, "return value %c 0", res_str_og);
+
+
+	test_assert(res_str == res_str_og, test);
+}
+
 
 static void	run_tests()
 {
 	test1();
+	test2();
 }
 
 int	main()
