@@ -17,8 +17,8 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include "../../libft.h"
-#define FT "ft_lstdelone"
-#define FUNC(a, b) ft_lstdelone(a, b)
+#define FT "ft_lstclear"
+#define FUNC(a, b) ft_lstclear(a, b)
 
 static int tests_run = 0;
 static int tests_failed = 0;
@@ -30,55 +30,39 @@ typedef struct s_test_data {
 } t_test_data;
 
 
-static void	free_list(t_list *lst)
-{
-	if (lst)
-	{
-		free_list(lst->next);
-		free(lst);
-		lst = NULL;
-	}
-}
-
 void	del_int(void *content)
 {
 	if (content)
 		free(content);
 }
 
+
+
 /* Tests functions */
 static void	test1() {
-	t_test_data	test;
 	t_list		*lst;
 	t_list		*curr;
-	t_list		*del_expected;
-	t_list		*del_next_expected;
-	t_list		*node_del;
-	int			content[2];
-	int			*wrong_number;
+	int			data[] = {5, 6, 7};
+	int			*content;
+	size_t		i;
 
-	content[0] = 5;
-	content[1] = 6;
-	wrong_number = (int *)malloc(sizeof(int));
-	if(wrong_number)
-		*wrong_number = 3;
-	
-	lst = ft_lstnew(wrong_number);
+	content = (int *)malloc(sizeof(int));
+	if (content)
+		*content = data[0];
+	lst = ft_lstnew(content);
 	curr = lst;
-	node_del = lst;
-	curr->next = ft_lstnew(&content[1]);
-
-	if (lst)
-		sprintf(test.message, "%s(lst = %p {content: %d, next: %p})", FT, node_del, *(int *)node_del->content, node_del->next);
-
-	del_expected = node_del;
-	del_next_expected = node_del->next;
-
-	sprintf(test.expected, "del: ? {content: ?, next: %p}", del_next_expected);
+	i = 1;
+	while (i < sizeof(data) / sizeof(data[0]))
+	{
+		content = (int *)malloc(sizeof(int));
+		if (content)
+			*content = data[i];
+		curr->next = ft_lstnew(content);
+		curr = curr->next;
+		i++;
+	}
 	
-	FUNC(node_del, &del_int);
-
-	free_list(del_next_expected);
+	FUNC(&lst, &del_int);
 
 	printf("Done.\n");
 	printf("-- Please check if memory was freed correctly with valgrind.\n");
